@@ -8,6 +8,12 @@
 
 #import "AppDelegate.h"
 
+const unsigned char SpeechKitApplicationKey[] = {0x2c, 0x5b, 0x38, 0x71, 0x25, 0x19, 0x22, 0x13, 0x7e, 0xe1, 0xe3, 0xf1, 0xd3, 0xf8, 0xec, 0x1d, 0xc1, 0x9d, 0x95, 0x8a, 0x07, 0x87, 0xbe, 0xd3, 0x0e, 0x63, 0xe3, 0x2d, 0x42, 0x9b, 0xbd, 0x6e, 0xf6, 0xf6, 0xdf, 0x1b, 0x0f, 0x02, 0x2f, 0x8d, 0xe3, 0x12, 0x7e, 0xb6, 0x0b, 0x6a, 0xd4, 0xcc, 0x08, 0x69, 0x56, 0x0f, 0xf0, 0x15, 0xe2, 0xfe, 0x78, 0xc5, 0x2c, 0xba, 0x61, 0xe9, 0x29, 0x57};
+NSString* APP_ID = @"NMDPTRIAL_kokian20150131100635";
+NSString* HOST = @"sandbox.nmdp.nuancemobility.net";
+long PORT = 443;
+BOOL SSL = NO;
+
 @interface AppDelegate ()
 
 @end
@@ -17,6 +23,8 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+    [SpeechKit setupWithID: APP_ID host: HOST port: PORT useSSL: SSL delegate:self];
+    [self setEarcons];
     return YES;
 }
 
@@ -42,6 +50,18 @@
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     // Saves changes in the application's managed object context before the application terminates.
     [self saveContext];
+}
+
+#pragma mark - SpeechKit init
+
+- (void)setEarcons {
+    SKEarcon* earconStart   = [SKEarcon earconWithName:@"beep5.mp3"];
+    SKEarcon* earconStop    = [SKEarcon earconWithName:@"beep1.mp3"];
+    SKEarcon* earconCancel  = [SKEarcon earconWithName:@"beep7.mp3"];
+    
+    [SpeechKit setEarcon:earconStart forType:SKStartRecordingEarconType];
+    [SpeechKit setEarcon:earconStop forType:SKStopRecordingEarconType];
+    [SpeechKit setEarcon:earconCancel forType:SKCancelRecordingEarconType];
 }
 
 #pragma mark - Core Data stack
